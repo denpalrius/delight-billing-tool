@@ -1,6 +1,8 @@
 from io import BytesIO
 from datetime import datetime
+from pathlib import Path
 import streamlit as st
+from PIL import Image
 import pandas as pd
 import xlrd
 import openpyxl
@@ -202,6 +204,12 @@ def build_summary_workbook(df_raw: pd.DataFrame) -> Workbook:
 
 
 def main():
+    _favicon = Image.open(Path(__file__).parent / "assets" / "favicon.png")
+    st.set_page_config(
+        page_title="Delight Billing Tool",
+        page_icon=_favicon,
+        layout="centered",
+    )
     st.title("Daily Staffing Analysis App")
 
     files = st.file_uploader(
