@@ -5,6 +5,12 @@
   "observability": {
     "enabled": true
   },
+  "routes": [
+    {
+      "pattern": "billing.delight-residential.com",
+      "custom_domain": true
+    }
+  ],
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
