@@ -20,6 +20,10 @@ export default {
       return handleProcessRequest(request);
     }
 
+    if (url.pathname.startsWith("/api/")) {
+      return notFoundResponse(request);
+    }
+
     return env.ASSETS.fetch(request);
   },
 } satisfies ExportedHandler<Env>;
@@ -103,4 +107,119 @@ async function handleProcessRequest(request: Request): Promise<Response> {
 
 function jsonError(message: string, status: number): Response {
   return Response.json({ error: message }, { status });
+}
+
+function notFoundResponse(request: Request): Response {
+  const acceptsHtml = request.headers.get("accept")?.includes("text/html");
+
+  if (!acceptsHtml) {
+    return jsonError("Not found.", 404);
+  }
+
+  const html = `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page Not Found | Delight Billing Tool</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --primary: #7ecfd8;
+        --secondary: #ffd43b;
+        --accent: #4b2580;
+        --background: #fffdfa;
+        --surface: rgba(255, 255, 255, 0.88);
+        --surface-border: rgba(75, 37, 128, 0.1);
+        --text: #2e2e2e;
+        --muted: #736a63;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 1.5rem;
+        font-family: "Inter", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 15% 10%, rgba(255, 212, 59, 0.22), transparent 22rem),
+          radial-gradient(circle at 85% 18%, rgba(126, 207, 216, 0.22), transparent 25rem),
+          linear-gradient(180deg, #fffdfa 0%, #fdfaf4 52%, #f7fcfc 100%);
+      }
+
+      main {
+        width: min(42rem, 100%);
+        padding: 2rem;
+        border: 1px solid var(--surface-border);
+        border-radius: 28px;
+        background: var(--surface);
+        box-shadow:
+          0 16px 50px rgba(126, 207, 216, 0.14),
+          0 22px 80px rgba(75, 37, 128, 0.14);
+      }
+
+      p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .eyebrow {
+        margin-bottom: 0.75rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        font-size: 0.82rem;
+      }
+
+      h1 {
+        margin: 0 0 0.85rem;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: clamp(2rem, 4vw, 3rem);
+        line-height: 1.08;
+        letter-spacing: -0.03em;
+        color: var(--accent);
+      }
+
+      a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1.4rem;
+        min-width: 11rem;
+        padding: 0.9rem 1.2rem;
+        border-radius: 999px;
+        font-weight: 700;
+        color: white;
+        text-decoration: none;
+        background: linear-gradient(135deg, var(--primary) 0%, #63b7c3 100%);
+        box-shadow: 0 14px 26px rgba(126, 207, 216, 0.24);
+      }
+
+      strong { color: var(--accent); }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Delight Billing Tool</p>
+      <h1>That page is not available.</h1>
+      <p>
+        The requested path could not be found on the billing service. If you are
+        looking for the workbook uploader, return to the main billing page.
+      </p>
+      <a href="/">Back to billing tool</a>
+    </main>
+  </body>
+</html>`;
+
+  return new Response(html, {
+    status: 404,
+    headers: {
+      "Content-Type": "text/html; charset=UTF-8",
+      "Cache-Control": "no-store",
+    },
+  });
 }
