@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Delight Billing Tool</title>
+    <link rel="icon" href="/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <div class="ambient ambient-left" aria-hidden="true"></div>
+      <div class="ambient ambient-right" aria-hidden="true"></div>
+      <section class="hero">
+        <p class="eyebrow">Delight Billing Tool</p>
+        <h1>Prepare the daily billing workbook.</h1>
+        <p class="lede">
+          Upload the completed Excel files for the day. The workbook is prepared
+          automatically for operations review and download.
+        </p>
+      </section>
+
+      <section class="panel">
+        <form id="upload-form" class="upload-form">
+          <label class="file-field" for="files">
+            <span class="file-field-title">Daily Excel files</span>
+            <span class="file-field-copy">
+              Add one or more `.xls` or `.xlsx` files to begin processing.
+            </span>
+            <span class="file-picker">
+              <span class="file-picker-button">Choose files</span>
+              <span class="file-picker-hint">or drag them into this window</span>
+            </span>
+            <input
+              id="files"
+              name="files"
+              type="file"
+              accept=".xls,.xlsx"
+              multiple
+            />
+          </label>
+
+          <div id="selected-files" class="selected-files">No files selected yet.</div>
+
+          <button id="submit-button" type="submit" disabled>Process billing files</button>
+        </form>
+
+        <div id="progress-panel" class="progress-panel is-hidden" aria-live="polite">
+          <div class="progress-meta">
+            <span class="progress-label">Processing status</span>
+            <span id="progress-value" class="progress-value">0%</span>
+          </div>
+          <div class="progress-track">
+            <div id="progress-bar" class="progress-bar"></div>
+          </div>
+          <p id="status" class="status"></p>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
