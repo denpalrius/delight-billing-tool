@@ -1,93 +1,49 @@
-# 🏥 Delight Billing Tool
+# Delight Billing Tool
 
-A Streamlit-powered daily staffing analysis tool that processes per-person Excel billing sheets and generates a consolidated daily summary workbook.
+Cloudflare Workers rewrite of the Delight billing workflow.
 
-## Overview
+## Architecture
 
-This tool is designed for healthcare staffing teams to streamline the review and billing reconciliation process. It ingests one or more per-person `.xls` / `.xlsx` files, extracts service hours per provider and individual, and produces a clean Excel summary with daily matrices, provider totals, and 24-hour cap calculations.
+- `public/`: static frontend assets
+- `src/`: Worker API and Excel processing logic
+- `legacy/streamlit/`: preserved Streamlit implementation
 
-## Features
+The production flow is:
 
-- 📂 **Multi-file upload** — Process multiple Excel billing files at once
-- 🔍 **Automatic section detection** — Locates all `Date` header blocks below the `Time Zone:` row in each sheet
-- 🧮 **Hours aggregation** — Converts session minutes to decimal hours and groups by date, service provider, and individual
-- 📊 **Daily Matrix output** — Generates one block per date with:
-  - Service provider rows with hours per individual
-  - Provider-level row totals (SUM formula)
-  - Individual-level column totals
-  - 24-hour cap remaining per individual
-- 📥 **One-click download** — Download the summary as a dated `.xlsx` file
+1. Browser uploads one or more Excel files to `POST /api/process`
+2. Worker parses the files and generates the summary workbook server-side
+3. Browser downloads the generated `.xlsx`
 
-## Tech Stack
-
-| Layer | Library |
-|-------|---------|
-| UI | [Streamlit](https://streamlit.io) |
-| Excel parsing | [pandas](https://pandas.pydata.org), [xlrd](https://xlrd.readthedocs.io), [openpyxl](https://openpyxl.readthedocs.io) |
-| Excel generation | [openpyxl](https://openpyxl.readthedocs.io) |
-
-## Getting Started
-
-### Prerequisites
-
-- Python 3.10+
-- `pip` or a virtual environment manager
-
-### Installation
+## Local Development
 
 ```bash
-# Clone the repository
-git clone https://github.com/denpalrius/delight-billing-tool.git
-cd delight-billing-tool
-
-# Create and activate a virtual environment
-python -m venv .venv
-source .venv/bin/activate   # on Windows: .venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
+npm install
+npm run dev
 ```
 
-### Running the App
+Then open the local Wrangler URL in a browser.
+
+## Testing
 
 ```bash
-streamlit run app.py
+npm test
+npm run check
 ```
 
-The app will open in your browser at `http://localhost:8501`.
+For a manual smoke test, start `npm run dev` and upload [`tests/fixtures/valid-input.xlsx`](/Users/mzitoh/Desktop/source/delight/delight-billing-tool/tests/fixtures/valid-input.xlsx).
 
-## Usage
+For a browser-level smoke test with Playwright:
 
-1. Launch the app with `streamlit run app.py`.
-2. Click **Browse files** and upload one or more per-person Excel billing sheets (`.xls` or `.xlsx`).
-3. The tool will parse each file, aggregate service hours, and automatically generate the summary.
-4. Click **Download Summary Excel** to save the `daily_summary_<date>.xlsx` file.
-
-## Expected Input Format
-
-Each uploaded Excel file should follow this structure:
-
-- **Cell D3** — Individual's name (comma-separated; first part is used)
-- A **"Time Zone:"** label in column A somewhere above the data sections
-- One or more data sections starting with a row where **column A = "Date"** and ending with a row where **column C = "Total"**
-- Within each data section:
-  - **Column E (index 4)** — Duration in minutes
-  - **Column G (index 6)** — Service Provider name
-
-## Project Structure
-
-```
-delight-billing-tool/
-├── app.py                        # Main Streamlit application
-├── daily_staffing_analysis.ipynb # Jupyter notebook for exploratory analysis
-├── requirements.txt              # Python dependencies
-└── README.md                     # Project documentation
+```bash
+npm run dev
+npm run test:smoke -- data/july_raw.xlsx
 ```
 
-## Contributing
+The Worker now supports both of these input shapes:
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+- legacy per-person sheets from the original Streamlit app
+- existing `DailyMatrix` workbooks like [`data/july_raw.xlsx`](/Users/mzitoh/Desktop/source/delight/delight-billing-tool/data/july_raw.xlsx)
 
-## License
+## Legacy App
 
-This project is proprietary. All rights reserved.
+The original Python/Streamlit implementation is preserved in [`legacy/streamlit/README.md`](/Users/mzitoh/Desktop/source/delight/delight-billing-tool/legacy/streamlit/README.md).

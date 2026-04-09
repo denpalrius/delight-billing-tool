@@ -1,6 +1,11 @@
 .DS_Store
 .ipynb_checkpoints/
 __pycache__/
+node_modules/
+.wrangler/
+coverage/
+dist/
+output/
 
 # Data files
 data/
