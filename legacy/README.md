@@ -38,7 +38,7 @@ This tool is designed for healthcare staffing teams to streamline the review and
 ```bash
 # Clone the repository
 git clone https://github.com/denpalrius/delight-billing-tool.git
-cd delight-billing-tool
+cd delight-billing-tool/legacy
 
 # Create and activate a virtual environment
 python -m venv .venv
@@ -51,14 +51,14 @@ pip install -r requirements.txt
 ### Running the App
 
 ```bash
-streamlit run app.py
+python -m streamlit run streamlit_app.py
 ```
 
 The app will open in your browser at `http://localhost:8501`.
 
 ## Usage
 
-1. Launch the app with `streamlit run app.py`.
+1. Launch the app with `python -m streamlit run streamlit_app.py`.
 2. Click **Browse files** and upload one or more per-person Excel billing sheets (`.xls` or `.xlsx`).
 3. The tool will parse each file, aggregate service hours, and automatically generate the summary.
 4. Click **Download Summary Excel** to save the `daily_summary_<date>.xlsx` file.
@@ -78,10 +78,11 @@ Each uploaded Excel file should follow this structure:
 
 ```
 delight-billing-tool/
-├── app.py                        # Main Streamlit application
-├── daily_staffing_analysis.ipynb # Jupyter notebook for exploratory analysis
-├── requirements.txt              # Python dependencies
-└── README.md                     # Project documentation
+└── legacy/
+    ├── streamlit_app.py              # Main Streamlit application
+    ├── daily_staffing_analysis.ipynb # Jupyter notebook for exploratory analysis
+    ├── requirements.txt              # Python dependencies
+    └── README.md                     # Project documentation
 ```
 
 ## Contributing

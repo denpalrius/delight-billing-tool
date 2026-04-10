@@ -6,7 +6,7 @@ Cloudflare Workers rewrite of the Delight billing workflow.
 
 - `public/`: static frontend assets
 - `src/`: Worker API and Excel processing logic
-- `legacy/streamlit/`: preserved Streamlit implementation
+- `legacy/`: preserved Streamlit implementation
 
 The production flow is:
 
@@ -46,4 +46,4 @@ The Worker now supports both of these input shapes:
 
 ## Legacy App
 
-The original Python/Streamlit implementation is preserved in [`legacy/streamlit/README.md`](/Users/mzitoh/Desktop/source/delight/delight-billing-tool/legacy/streamlit/README.md).
+The original Python/Streamlit implementation is preserved in [`legacy/README.md`](/Users/mzitoh/Desktop/source/delight/delight-billing-tool/legacy/README.md).

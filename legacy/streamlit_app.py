@@ -122,6 +122,7 @@ def build_summary_workbook(df_raw: pd.DataFrame) -> Workbook:
     """
     wb = Workbook()
     ws = wb.active
+    assert ws is not None
     ws.title = "DailyMatrix"
     bold = Font(bold=True)
 
@@ -204,10 +205,11 @@ def build_summary_workbook(df_raw: pd.DataFrame) -> Workbook:
 
 
 def main():
-    _favicon = Image.open(Path(__file__).parent / "assets" / "favicon.png")
+    favicon_path = Path(__file__).parent / "assets" / "favicon.png"
+    page_icon = Image.open(favicon_path) if favicon_path.exists() else None
     st.set_page_config(
         page_title="Delight Billing Tool",
-        page_icon=_favicon,
+        page_icon=page_icon,
         layout="centered",
     )
     st.title("Daily Staffing Analysis App")
