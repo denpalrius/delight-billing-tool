@@ -1,12 +1,18 @@
 {
-  "name": "Python 3",
+  "name": "Delight Billing Tool",
   // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
   "image": "mcr.microsoft.com/devcontainers/python:1-3.11-bullseye",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
+    }
+  },
   "customizations": {
     "codespaces": {
       "openFiles": [
         "README.md",
-        "app.py"
+        "legacy/streamlit_app.py",
+        "src/index.ts"
       ]
     },
     "vscode": {
@@ -17,17 +23,19 @@
       ]
     }
   },
-  "updateContentCommand": "[ -f packages.txt ] && sudo apt update && sudo apt upgrade -y && sudo xargs apt install -y <packages.txt; [ -f requirements.txt ] && pip3 install --user -r requirements.txt; pip3 install --user streamlit; echo '✅ Packages installed and Requirements met'",
-  "postAttachCommand": {
-    "server": "streamlit run app.py --server.enableCORS false --server.enableXsrfProtection false"
-  },
+  "updateContentCommand": "if [ -f packages.txt ]; then sudo apt update && sudo xargs -r apt install -y < packages.txt; fi && if [ -f package.json ]; then npm install; fi && if [ -f legacy/requirements.txt ]; then pip3 install --user -r legacy/requirements.txt; fi && echo '✅ Development dependencies installed'",
   "portsAttributes": {
     "8501": {
-      "label": "Application",
+      "label": "Legacy Streamlit App",
+      "onAutoForward": "openPreview"
+    },
+    "8787": {
+      "label": "Worker App",
       "onAutoForward": "openPreview"
     }
   },
   "forwardPorts": [
-    8501
+    8501,
+    8787
   ]
 }
