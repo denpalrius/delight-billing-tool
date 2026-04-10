@@ -13,3 +13,6 @@ results/
 
 # Environment variables
 .env
+
+# IDE and editor files
+.playwright-cli/
