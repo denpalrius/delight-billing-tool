@@ -205,8 +205,8 @@ def build_summary_workbook(df_raw: pd.DataFrame) -> Workbook:
 
 
 def main():
-    favicon_path = Path(__file__).parent / "assets" / "favicon.png"
-    page_icon = Image.open(favicon_path) if favicon_path.exists() else None
+    favicon_path = Path(__file__).resolve().parent.parent / "public" / "favicon.ico"
+    page_icon = favicon_path if favicon_path.exists() else None
     st.set_page_config(
         page_title="Delight Billing Tool",
         page_icon=page_icon,
